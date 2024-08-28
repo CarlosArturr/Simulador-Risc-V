@@ -4,6 +4,7 @@ Um projeto de OAC construir um simulador em Risc-V com as instruções add, addi
 
 
 Referencias:
+
   https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
   
   DigitalDesign andCOmputer Architecture
