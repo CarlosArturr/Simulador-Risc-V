@@ -12,5 +12,6 @@ def main():
     simulador(pc)
 
 if __name__ == "__main__":
-        main()
-
+    main() 
+    
+    
