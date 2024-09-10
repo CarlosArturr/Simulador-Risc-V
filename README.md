@@ -13,3 +13,7 @@ Referencias:
   https://archive.org/details/stallings-arquitetura-e-organizacao-de-computadores-10a/page/n31/mode/2up?view=theater
   
   DigitalDesign and Computer Architecture
+
+Base:
+
+https://docs.google.com/document/d/1YlCuWHUAyFOEBDIAoOZtD7dMzyMK0adR3LiP_OY1DtU/edit
