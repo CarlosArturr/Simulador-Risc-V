@@ -15,11 +15,15 @@ def compilador(line):
 
 
 
+def main():
 
-saida = open('binario.txt', 'w')
+    saida = open('binario.txt', 'w')
+    risc = open( sys.argv[1] , 'r')
 
-risc = open( sys.argv[1] , 'r')
+    for line in risc:
+        compilador(line)
 
-for line in risc:
-    compilador(line)
+
+if __name__ == "__main__":
+        main()
 
