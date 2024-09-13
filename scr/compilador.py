@@ -67,45 +67,34 @@ def operacao(line):
     return byte
 
 def typeR(operandos, code, fun3, fun7):
-    #dec intruc rs2 rs1 rd
-    rs2 = "10001"
-    rs1 = "10001"
-    rd = "10001"
+    rd, rs1, rs2 = filtra_registradores("r", operandos)
     return "0b"+ fun7 + rs2 + rs1 + fun3 + rd + code
 
 def typeI(operandos, code, fun3):
-    #dec imd rs1
-    imd = "100000000001"
-    rs1 = "10001"
-    rd = "10001"
+    rd, rs1, imd = filtra_registradores("i", operandos)
     return "0b" + imd + rs1 + fun3 + rd + code
 
 def typeB(operandos, code, func3):
     #dec rs1 rs2 e ofssets
-    rs2 = "10001"
-    rs1 = "10001"
+    rs1, imd = filtra_registradores("b", operandos)
     ofsset12 = "101"
     ofsset4 = "101"
+    print(ofset)
     return "0b" + ofsset12 + rs2 + rs1 + func3 + ofsset4 + code
     
 def typeJ(operandos, code):
     #dec rs1 ofset
-    rs1 = "10001"
-    ofsset = "100000000001"
+    rs1= filtra_registradores("i", operandos)
     
     return "0b" + ofsset + rs1 + code
 
 def typeS(operandos, code , func3):
     #dec rs1 rs2 e ofssets
-    rs2 = "10001"
-    rs1 = "10001"
+    rs1, rs2 = filtra_registradores("s", operandos)
     ofsset11 = "101"
     ofsset4 =  "101"
+    print(ofset)
     return "0b" + ofsset11 + rs2 + rs1 + func3 + ofsset4 + code
-
-
-if __name__ == "__main__":
-    main()
 
 def filtra_registradores(tipo, operandos):
     resultado = []
@@ -131,3 +120,8 @@ def filtra_imm(tipo, elem):
         return f"{int(elem):012b}" 
     else:
         return f"{int(elem):020b}" 
+
+
+
+if __name__ == "__main__":
+    main()
