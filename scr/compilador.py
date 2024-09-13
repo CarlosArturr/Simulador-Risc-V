@@ -1,11 +1,4 @@
 import sys
-      
-def compilador(line, saida):
-
-    byte = operacao(line)
-    
-    saida.write(f"{byte}\n")
-
 
 def main():
     
@@ -17,7 +10,12 @@ def main():
         
         if retorno != None:
             compilador(retorno, saida)
-
+            
+def compilador(line, saida):
+    line = line.strip()
+    byte = operacao(line)
+    
+    saida.write(f"{byte}\n")
 
 def retiraComentarios(line):
     indice = line.find("#")
@@ -31,57 +29,80 @@ def retiraComentarios(line):
 
 
 def operacao(line):
-    instrucoes = line.split(" ") 
-    instrucao = instrucoes[0].lower()
-    code = ""
+    instrucoes = line.split(" ", 1) 
+    opcode = instrucoes[0].lower()
+    
+    if len(instrucoes) != 1:
+        operandos = instrucoes[1].split(", ")
 
-    if(instrucao == "add"):
-        code = typeR(instrucoes, "0110011", "000", "0000000")
-    elif(instrucao == "addi"):
-        code = typeI(instrucoes, "0010011", "000")
-    elif(instrucao == "sub"):
-        code = "0b0110011"
-    elif(instrucao == "or"):
-        code = "0b0110011"
-    elif(instrucao == "and"):
-        code = "0b0110011"
-    elif(instrucao == "andi"):
-        code = "0b0010011"
-    elif(instrucao == "beq"):
-        code = "0b1100011"
-    elif(instrucao == "bne"):
-        code = "0b1100011"
-    elif(instrucao == "jal"):
-        code = "0b1101111"
-    elif(instrucao == "ld"):
-        code = "0b0000011"
-    elif(instrucao == "sd"):
-        code = "0b0100011"
-    elif(instrucao == "nop"):
-        code = "0b0b0010011"
-        #addi x0, x0, x0 internamente
+    if(opcode == "add"):
+        byte = typeR(operandos, "0110011", "000", "0000000")
+    elif(opcode == "addi"):
+        byte = typeI(operandos, "0010011", "000")
+    elif(opcode == "sub"):
+        byte = "0b0110011"
+    elif(opcode == "or"):
+        byte = "0b0110011"
+    elif(opcode == "and"):
+        byte = typeR(operandos, "0110011", "111", "0000000")
+    elif(opcode == "andi"):
+        byte = typeI(operandos, "0010011", "111")
+    elif(opcode == "beq"):
+        byte = typeB(operandos, "1100011", "000")
+    elif(opcode == "bne"):
+        byte = byte = typeB(operandos, "1100011", "001")
+    elif(opcode == "jal"):
+        byte = typeJ(operandos, "1101111")
+    elif(opcode == "ld"):
+        byte = typeI(operandos, "0000011" ,"011")
+    elif(opcode == "sd"):
+        byte = typeS(operandos, "0100011", "000")
+    elif(opcode == "nop"):
+        byte = typeI(["x0", "x0", "0"], "0010011", "000")
+    elif(opcode[-1] == ":"):
+        byte = opcode
     else:
-        code = "erro"
+        byte = ""
         
-    return code
+    return byte
 
-def typeR(intrucoes, code, fun3, fun7):
+def typeR(operandos, code, fun3, fun7):
     #dec intruc rs2 rs1 rd
-    
-    code = "0b"+ fun7 + rs2 + rs1 + fun 3 + rd + code
-    
-    return code
+    rs2 = "10001"
+    rs1 = "10001"
+    rd = "10001"
+    return "0b"+ fun7 + rs2 + rs1 + fun3 + rd + code
 
-"""""
-def typeI(instrucoes, code, "000"):
+def typeI(operandos, code, fun3):
+    #dec imd rs1
+    imd = "100000000001"
+    rs1 = "10001"
+    rd = "10001"
+    return "0b" + imd + rs1 + fun3 + rd + code
 
-def typeB():
+def typeB(operandos, code, func3):
+    #dec rs1 rs2 e ofssets
+    rs2 = "10001"
+    rs1 = "10001"
+    ofsset12 = "101"
+    ofsset4 = "101"
+    return "0b" + ofsset12 + rs2 + rs1 + func3 + ofsset4 + code
     
-def typeJ():
+def typeJ(operandos, code):
+    #dec rs1 ofset
+    rs1 = "10001"
+    ofsset = "100000000001"
+    
+    return "0b" + ofsset + rs1 + code
 
-def typeS():
-"""""
-    
+def typeS(operandos, code , func3):
+    #dec rs1 rs2 e ofssets
+    rs2 = "10001"
+    rs1 = "10001"
+    ofsset11 = "101"
+    ofsset4 =  "101"
+    return "0b" + ofsset11 + rs2 + rs1 + func3 + ofsset4 + code
+
 
 if __name__ == "__main__":
     main()
