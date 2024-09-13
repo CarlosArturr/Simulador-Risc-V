@@ -34,6 +34,7 @@ def operacao(line):
     
     if len(instrucoes) != 1:
         operandos = instrucoes[1].split(", ")
+        print(operandos)
 
     if(opcode == "add"):
         byte = typeR(operandos, "0110011", "000", "0000000")
@@ -76,15 +77,14 @@ def typeI(operandos, code, fun3):
 
 def typeB(operandos, code, func3):
     #dec rs1 rs2 e ofssets
-    rs1, imd = filtra_registradores("b", operandos)
+    rs1, rs2, imd = filtra_registradores("b", operandos)
     ofsset12 = "101"
     ofsset4 = "101"
-    print(ofset)
     return "0b" + ofsset12 + rs2 + rs1 + func3 + ofsset4 + code
     
 def typeJ(operandos, code):
     #dec rs1 ofset
-    rs1= filtra_registradores("i", operandos)
+    rs1, ofsset = filtra_registradores("i", operandos)
     
     return "0b" + ofsset + rs1 + code
 
@@ -93,7 +93,6 @@ def typeS(operandos, code , func3):
     rs1, rs2 = filtra_registradores("s", operandos)
     ofsset11 = "101"
     ofsset4 =  "101"
-    print(ofset)
     return "0b" + ofsset11 + rs2 + rs1 + func3 + ofsset4 + code
 
 def filtra_registradores(tipo, operandos):
@@ -104,7 +103,6 @@ def filtra_registradores(tipo, operandos):
             resultado.append(filtra_reg(elem))
         else:
             try:
-                a = int(elem)
                 resultado.append(filtra_imm(tipo, elem))
             except:
                 resultado.append("0")
