@@ -37,6 +37,7 @@ def operacao(line):
 
     if(instrucao == "add"):
         code = "0b0110011"
+        typeR(instrucoes, code, 000, 0000000)
     elif(instrucao == "addi"):
         code = "0b0010011"
     elif(instrucao == "sub"):
@@ -65,7 +66,23 @@ def operacao(line):
         
     return code
 
+def typeR(intrucoes, code, fun3, fun7):
+    #dec intruc rs2 rs1 rd
+    
+    code = fun7 + rs2 + rs2 + fun 3 + rd + code
+    
+    return code
 
+"""""
+def type():
+
+def type():
+    
+def type():
+
+def type():
+"""""
+    
 
 if __name__ == "__main__":
     main()
