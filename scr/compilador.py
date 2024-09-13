@@ -106,3 +106,28 @@ def typeS(operandos, code , func3):
 
 if __name__ == "__main__":
     main()
+
+def filtra_registradores(tipo, operandos):
+    resultado = []
+    
+    for elem in operandos:
+        if(elem[0] == "x"):
+            resultado.append(filtra_reg(elem))
+        else:
+            resultado.append(filtra_imm(tipo, elem))
+    
+    return resultado
+
+def filtra_reg(operando):
+    return f"{int(operando[1:]):05b}"
+    
+    
+def filtra_imm(tipo, elem):
+    if tipo == "i":
+        return f"{int(elem):012b}" 
+    elif tipo == "s":
+        return f"{int(elem):07b}" 
+    elif tipo == "b":
+        return f"{int(elem):012b}" 
+    else:
+        return f"{int(elem):020b}" 
