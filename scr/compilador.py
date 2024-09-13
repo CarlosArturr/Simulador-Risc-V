@@ -1,7 +1,37 @@
 import sys
+      
+def compilador(line, saida):
+
+    byte = operacao(line)
+    
+    saida.write(f"{byte}\n")
+
+
+def main():
+    
+    saida = open('binario.txt', 'w')
+    risc = open( sys.argv[1] , 'r')
+
+    for line in risc:
+        retorno = retiraComentarios(line)
+        
+        if retorno != None:
+            compilador(retorno, saida)
+
+
+def retiraComentarios(line):
+    indice = line.find("#")
+    
+    if indice == 0:
+        return
+    elif indice == -1:
+        return line
+    else:
+        return line[:indice-1]
+
 
 def operacao(line):
-    instrucoes = line.split(" ")
+    instrucoes = line.split(" ") 
     instrucao = instrucoes[0].lower()
     code = ""
 
@@ -34,38 +64,8 @@ def operacao(line):
         code = "erro"
         
     return code
-        
-    
-def compilador(line, saida):
-
-    byte = operacao(line)
-    
-    saida.write(f"{byte}\n")
 
 
-def retiraComentarios(line):
-    indice = line.find("#")
-    
-    if indice == 0:
-        return
-    elif indice == -1:
-        return line
-    else:
-        return line[:indice-1]
-        
-
-def main():
-    
-    saida = open('binario.txt', 'w')
-    risc = open( sys.argv[1] , 'r')
-
-    for line in risc:
-        retorno = retiraComentarios(line)
-        
-        if retorno != None:
-            compilador(retorno, saida)
 
 if __name__ == "__main__":
     main()
-  
-        
