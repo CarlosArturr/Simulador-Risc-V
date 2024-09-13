@@ -103,7 +103,11 @@ def filtra_registradores(tipo, operandos):
         if(elem[0] == "x"):
             resultado.append(filtra_reg(elem))
         else:
-            resultado.append(filtra_imm(tipo, elem))
+            try:
+                a = int(elem)
+                resultado.append(filtra_imm(tipo, elem))
+            except:
+                resultado.append("0")
     
     return resultado
 
@@ -120,8 +124,6 @@ def filtra_imm(tipo, elem):
         return f"{int(elem):012b}" 
     else:
         return f"{int(elem):020b}" 
-
-
 
 if __name__ == "__main__":
     main()
