@@ -1,15 +1,23 @@
 import sys
+import os
 
 def main():
+
+    entrada = sys.argv[1]
+
+    nome_saida = os.path.splitext(entrada) [0] + '.txt'
     
-    saida = open('binario.txt', 'w')
-    risc = open( sys.argv[1] , 'r')
+    saida = open(nome_saida, 'w')
+    risc = open(entrada, 'r')
 
     for line in risc:
         retorno = retiraComentarios(line)
         
         if retorno != None:
             compilador(retorno, saida)
+
+    saida.close()
+    risc.close()
             
 def compilador(line, saida):
     line = line.strip()
