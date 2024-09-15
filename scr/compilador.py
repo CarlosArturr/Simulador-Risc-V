@@ -4,7 +4,6 @@ import os
 def main():
 
     entrada = sys.argv[1]
-
     nome_saida = os.path.splitext(entrada) [0] + '.txt'
     
     saida = open(nome_saida, 'w')
