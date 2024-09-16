@@ -1,6 +1,7 @@
 import sys
 import os
 
+
 def main():
     entrada = sys.argv[1]
     nome_saida = os.path.splitext(entrada)[0] + '.txt'
@@ -141,7 +142,7 @@ def filtra_imm(tipo, elem):
 if __name__ == "__main__":
     main()
 
-
+"""
 //Simulador:
 
 import sys
@@ -258,3 +259,4 @@ def main():
 if __name__ == "__main__":
     main()
 
+"""
