@@ -1,6 +1,9 @@
 import sys
 import os
 
+rotulos = {}
+contLine = 0
+
 def main():
 
     entrada = sys.argv[1]
@@ -9,11 +12,28 @@ def main():
     saida = open(nome_saida, 'w')
     risc = open(entrada, 'r')
 
+    cont = 0 
+    for line in risc:
+        global rotulos
+        retorno = retiraComentarios(line)
+        
+        if retorno != None:
+            if(retorno.strip()[-1] == ":"):
+                rotulos[retorno.strip()[:-1]] = cont
+                cont -= 1
+                
+            cont += 1
+    
+    print(rotulos)
+    risc.seek(0)
+     
+    
     for line in risc:
         retorno = retiraComentarios(line)
         
         if retorno != None:
             compilador(retorno, saida)
+
 
     saida.close()
     risc.close()
@@ -22,7 +42,8 @@ def compilador(line, saida):
     line = line.strip()
     byte = operacao(line)
     
-    saida.write(f"{byte}\n")
+    if(byte != ""):
+        saida.write(f"{byte}\n")
 
 def retiraComentarios(line):
     indice = line.find("#")
@@ -33,7 +54,7 @@ def retiraComentarios(line):
         return line
     else:
         return line[:indice-1]
-
+    
 
 def operacao(line):
     instrucoes = line.split(" ", 1) 
@@ -41,7 +62,7 @@ def operacao(line):
     
     if len(instrucoes) != 1:
         operandos = instrucoes[1].split(", ")
-        print(operandos)
+        
 
     if(opcode == "add"):
         byte = typeR(operandos, "0110011", "000", "0000000")
@@ -68,7 +89,7 @@ def operacao(line):
     elif(opcode == "nop"):
         byte = typeI(["x0", "x0", "0"], "0010011", "000")
     else:
-        return 
+        byte = ""
         
     return byte
 
@@ -83,12 +104,13 @@ def typeI(operandos, code, fun3):
 def typeB(operandos, code, func3):
     #dec rs1 rs2 e ofssets
     rs1, rs2, imd = filtra_registradores("b", operandos)
+    
     ofsset12 = "101"
     ofsset4 = "101"
     return "0b" + ofsset12 + rs2 + rs1 + func3 + ofsset4 + code
     
 def typeJ(operandos, code):
-    #dec rs1 ofset
+
     rs1, ofsset = filtra_registradores("i", operandos)
     
     return "0b" + ofsset + rs1 + code
@@ -100,17 +122,36 @@ def typeS(operandos, code , func3):
     ofsset4 =  "101"
     return "0b" + ofsset11 + rs2 + rs1 + func3 + ofsset4 + code
 
+
 def filtra_registradores(tipo, operandos):
     resultado = []
+    global rotulos 
+    global contLine
     
     for elem in operandos:
         if(elem[0] == "x"):
             resultado.append(filtra_reg(elem))
         else:
             try:
-                resultado.append(filtra_imm(tipo, elem))
+                resultado.append(filtra_immI(elem))
             except:
-                resultado.append("0")
+                if elem in rotulos:
+                    if tipo == "s":
+                        resultado.append(f"{(rotulos[elem]- contLine):07b}")
+                    elif tipo == "b":
+                        print(f"Valor do rotulo: {rotulos[elem]}")
+                        print(f"Valor do cont: {contLine}")
+                        print(rotulos[elem]- contLine)
+                        resultado.append(f"{(rotulos[elem]- contLine):012b}")
+                    else:
+                        print(f"Valor do rotulo: {rotulos[elem]}")
+                        print(f"Valor do cont: {contLine}")
+                        print(rotulos[elem]- contLine)
+                        resultado.append(f"{(rotulos[elem]- contLine):020b}")
+    print(contLine)
+    print(operandos)
+    contLine += 1
+
     
     return resultado
 
@@ -118,15 +159,10 @@ def filtra_reg(operando):
     return f"{int(operando[1:]):05b}"
     
     
-def filtra_imm(tipo, elem):
-    if tipo == "i":
-        return f"{int(elem):012b}" 
-    elif tipo == "s":
-        return f"{int(elem):07b}" 
-    elif tipo == "b":
-        return f"{int(elem):012b}" 
-    else:
-        return f"{int(elem):020b}" 
+def filtra_immI(elem):
+    return f"{int(elem):012b}"
+
 
 if __name__ == "__main__":
     main()
+    

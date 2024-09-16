@@ -35,7 +35,7 @@ def executa(operacao, opcode):
         opcode, offset, func3, rs1, rs2, offset2  = operacao
        
     elif opcode == "1101111":  # jal
-        #opcode, rd, im2 , im im  = operacao
+        opcode, rd, im8, im1, im10, imm1  = operacao
        
     elif opcode == "0100011":  # sd
         opcode, offset, func3, rs1, rs2, offset2  = operacao

@@ -1,5 +1,5 @@
 #Armazena o N a x2, N está em 1024 na memória
-ld  x2, 1024(x0)
+ld  x2, x1024
 #Amazenando a posicao de Memoria Para a recursão
 addi x1, x0, 1
 #Aumentando para n+1
@@ -16,4 +16,4 @@ fatorial:
     beq x0, x0, fatorial
        
 #Resulato em 2000 na memoria
-exit:   sd   x3, 2000(x0)
+exit:   sd   x3, x2000

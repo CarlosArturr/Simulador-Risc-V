@@ -1,4 +1,4 @@
-jal x2, save
+jal x0, save
 loop:
     beq x15, x7, fim
     addi x15, x15, 1
