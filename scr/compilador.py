@@ -67,9 +67,9 @@ def operacao(line):
     elif(opcode == "addi"):
         byte = typeI(operandos, "0010011", "000")
     elif(opcode == "sub"):
-        byte = "0b0110011"
+        byte = typeR(operandos, "0110011", "000", "0100000")
     elif(opcode == "or"):
-        byte = "0b0110011"
+        byte = typeR(operandos, "0110011", "110", "0000000")
     elif(opcode == "and"):
         byte = typeR(operandos, "0110011", "111", "0000000")
     elif(opcode == "andi"):
