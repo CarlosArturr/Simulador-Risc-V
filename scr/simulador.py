@@ -1,114 +1,93 @@
 import sys
 
-def main():
-    if len(sys.argv) != 2:
-        print("Uso: python simulador.py <arquivo_de_instrucoes>")
-        sys.exit(1)
+# Variáveis globais
+run = 1
+pc = 0
+memoria = [0] * 128
+registradores = [0] * 8
+
+def simulador(binario):
+    global run, pc
     
-    arquivo_entrada = sys.argv[1]
+    limit = len(binario)
     
-    # Inicialização das memórias e registradores
-    inst_mem = [0] * 128  # Memória de instruções com capacidade de 128 endereços
-    data_mem = [0] * 16   # Memória de dados com capacidade de 16 endereços
-    registers = [0] * 8   # Registradores r0 a r7
-    pc = 0  # Program Counter
-
-    # Carregar instruções do arquivo de entrada
-    try:
-        with open(arquivo_entrada, 'r') as file:
-            for i, line in enumerate(file):
-                if i < 128:  # Limitar a 128 instruções
-                    inst_mem[i] = int(line.strip(), 2)
-    except FileNotFoundError:
-        print(f"Erro: O arquivo '{arquivo_entrada}' não foi encontrado.")
-        sys.exit(1)
-    except ValueError:
-        print("Erro: O arquivo de entrada contém valores que não são binários válidos.")
-        sys.exit(1)
-
-    def decode_and_execute(instr):
-        # Decodificar a instrução
-        opcode = instr & 0b1111111
-        rd = (instr >> 7) & 0b11111
-        rs1 = (instr >> 15) & 0b11111
-        rs2 = (instr >> 20) & 0b11111
-        funct3 = (instr >> 12) & 0b111
-        funct7 = (instr >> 25) & 0b1111111
-        imm = (instr >> 20) & 0b111111111111
-
-        # Executar a instrução com base no opcode e outros campos
-        if opcode == 0b0110011:  # R-type
-            if funct3 == 0b000 and funct7 == 0b0000000:  # ADD
-                registers[rd] = registers[rs1] + registers[rs2]
-            elif funct3 == 0b000 and funct7 == 0b0100000:  # SUB
-                registers[rd] = registers[rs1] - registers[rs2]
-            elif funct3 == 0b111 and funct7 == 0b0000000:  # AND
-                registers[rd] = registers[rs1] & registers[rs2]
-            elif funct3 == 0b110 and funct7 == 0b0000000:  # OR
-                registers[rd] = registers[rs1] | registers[rs2]
-            else:
-                raise ValueError("Instrução R-Type inválida")
-        elif opcode == 0b0010011:  # I-type
-            if funct3 == 0b000:  # ADDI
-                registers[rd] = registers[rs1] + imm
-            elif funct3 == 0b111:  # ANDI
-                registers[rd] = registers[rs1] & imm
-            elif funct3 == 0b110:  # ORI
-                registers[rd] = registers[rs1] | imm
-            else:
-                raise ValueError("Instrução I-Type inválida")
-        elif opcode == 0b1100011:  # B-Type
-            if funct3 == 0b000:  # BEQ
-                if registers[rs1] == registers[rs2]:
-                    return pc + imm
-            elif funct3 == 0b001:  # BNE
-                if registers[rs1] != registers[rs2]:
-                    return pc + imm
-            else:
-                raise ValueError("Instrução B-Type inválida")
-        elif opcode == 0b1101111:  # J-Type
-            if funct3 == 0b000:  # JAL
-                registers[rd] = pc + 4
-                return pc + imm
-            else:
-                raise ValueError("Instrução J-Type inválida")
-        elif opcode == 0b0000011:  # Load
-            if funct3 == 0b011:  # LD
-                registers[rd] = data_mem[registers[rs1] + imm]
-            else:
-                raise ValueError("Instrução Load inválida")
-        elif opcode == 0b0100011:  # Store
-            if funct3 == 0b000:  # SD
-                data_mem[registers[rs1] + imm] = registers[rs2]
-            else:
-                raise ValueError("Instrução Store inválida")
-        elif opcode == 0b1110011:  # NOP
-            pass
-        else:
-            raise ValueError("Opcode inválido")
+    while run == 1 and pc < limit:
+        opcode = operacao[0]
+        executa(binario[pc], opcode)
+        pc_anterior = pc
+        pc += 1
         
-        return None
-
-    # Simulação
-    while pc < 128:
-        instr = inst_mem[pc]
-        if instr == 0b00000000000000000000000000000000:
-            # Instrução inválida, encerrar
-            break
-        next_pc = decode_and_execute(instr)
-        if next_pc is not None:
-            pc = next_pc
-        else:
-            pc += 1
-
-    # Exibir o estado final dos registradores e da memória
-    print(f"pc={pc},", end="")
-    print(f"r0={registers[0]},r1={registers[1]},r2={registers[2]},r3={registers[3]},r4={registers[4]},r5={registers[5]},r6={registers[6]},r7={registers[7]}")
+        print('pc = ',pc_anterior,'opCode =',opCode,'\tRegister r0 =',r0,'z = ',z)
     
-    print("Memória de Dados:")
-    for i in range(len(data_mem)):
-        print(f"endereço {i}: {data_mem[i]}")
+    print(f"PC final: {pc}")
+    print(f"Registradores: {registradores}")
+
+def executa(operacao, opcode):
+    global run, registradores
+   
+    if opcode == "0110011":  # add, sub, or, and
+        opcode, rd, func3, rs1, rs2, func7 = operacao
+        
+    elif opcode == "0010011":  # addi, andi, nop
+        opcode, rd, func3, rs1, imd = operacao
+      
+    elif opcode == "1100011":  # bne, beq
+        opcode, offset, func3, rs1, rs2, offset2  = operacao
+       
+    elif opcode == "1101111":  # jal
+        #opcode, rd, im2 , im im  = operacao
+       
+    elif opcode == "0100011":  # sd
+        opcode, offset, func3, rs1, rs2, offset2  = operacao
+       
+    elif opcode == "0000011":  # ld
+        opcode, rd, func3, rs1, imd = operacao
+        
+    else:
+        print("Opcode não reconhecido, finalizando simulação.")
+        run = 0  # Finaliza o simulador se a instrução não for reconhecida.
+
+def lista(binario):
+    lista_instrucao = []
+    
+    for line in binario:
+        line = cleaner(line)
+        opcode = line[25:32]
+        lista_instrucao.append(organizaInstrucao(line, opcode))
+        
+    return lista_instrucao
+        
+def cleaner(line):
+    line = line.split("b")
+    return line[-1]
+
+def organizaInstrucao(line, opcode):
+    # Decodifica as instruções com base no opcode
+    if opcode == "0110011":  # add, sub, or, and
+        return [opcode, line[20:25], line[17:20], line[12:17], line[7:12], line[0:7]]
+    elif opcode == "1100011":  # beq, bne
+        return [opcode, line[24:25], line[20:24], line[17:20], line[12:17], line[7:12], line[1:7], line[0:1]]
+    elif opcode == "1101111":  # jal
+        return [opcode, line[20:25], line[11:20], line[10:11], line[1:10], line[0:1]]
+    elif opcode == "0100011":  # sd
+        return [opcode, line[20:25], line[17:20], line[12:17], line[7:12], line[0:7]]
+    else:  # addi, andi, nop, ld
+        return [opcode, line[20:25], line[17:20], line[12:17], line[0:12]]
+        
+def main():
+    global run, pc, memoria, registradores
+    
+    binario = open(sys.argv[1], 'r')  # Arquivo com binário
+    # Organiza instruções
+    binario = lista(binario)
+    
+    # Executa simulador
+    run = 1
+    pc = 0
+    memoria = [0] * 128
+    registradores = [0] * 8
+    
+    simulador(binario)
 
 if __name__ == "__main__":
     main()
-
