@@ -16,9 +16,12 @@ def simulador(binario):
         pc_anterior = pc
         pc += 1
         
-        print(f'pc = {pc_anterior}, opCode = {opcode}, Register r{r} = {registradores[r]}')
+        if(run == 1):
+            print(f'pc = {pc_anterior}, opCode = {opcode}, Register r{r} = {registradores[r]}')
+        else:
+            print("Opcode não reconhecido, finalizando simulação.")
     
-    print(f"PC final: {pc}")
+    print(f"PC final: {pc-1}")
     print(f"Registradores: {registradores}")
     print(f"Memoria: {memoria}")
 
@@ -86,8 +89,17 @@ def executa(operacao, opcode):
                 registradores[rd] = memoria[registradores[rs1]]
                 return rd
 
+    elif opcode == "0100011":  # sd
+        opcode, offset, func3, rs1, rs2, offset2  = operacao
+        rs1 = int(rs1, 2)
+        rs2 = int(rs2, 2)
+        
+        if func3 == "000":
+            memoria[rs2] = registradores[rs1]
+            #corrigir
+            return rs1
+
     else:
-        print("Opcode não reconhecido, finalizando simulação.")
         run = 0  # Finaliza o simulador se a instrução não for reconhecida.
         return 0
     """     
@@ -106,11 +118,6 @@ def executa(operacao, opcode):
     elif opcode == "1101111":  # jal
         opcode, rd, im8, im1, im10, imm1  = operacao
 
-
-       
-    elif opcode == "0100011":  # sd
-        opcode, offset, func3, rs1, rs2, offset2  = operacao
-        if
 """
 
 
@@ -158,4 +165,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -82,7 +82,7 @@ def operacao(line):
     elif(opcode == "beq"):
         byte = typeB(operandos, "1100011", "000")
     elif(opcode == "bne"):
-        byte = byte = typeB(operandos, "1100011", "001")
+        byte = typeB(operandos, "1100011", "001")
     elif(opcode == "jal"):
         byte = typeJ(operandos, "1101111")
     elif(opcode == "ld"):
@@ -135,13 +135,13 @@ def typeJ(operandos, code):
     return f"0b{offset20:01b}{offset10_1:010b}{offset11:01b}{offset19_12:08b}{rd}{code}"
 
 def typeS(operandos, code, func3):
-    rs1, rs2, imd = filtra_registradores("s", operandos)
+    rs1, rs2 = filtra_registradores("s", operandos)
     
     # Separar o offset para os bits específicos
-    offset = int(imd, 2)
+    offset = 0
     offset11_5 = (offset >> 11) & 0x7F 
     
-    return f"0b{offset11_5:07b}{rs2}{rs1}{func3}{offset4_0:05b}{code}"
+    return f"0b{offset11_5:07b}{rs2}{rs1}{func3}{offset:05b}{code}"
 
 def filtra_registradores(tipo, operandos):
     resultado = []

@@ -8,5 +8,5 @@ addi x3, x0, 3
 # Incrementa x1 em 1
 addi x1, x1, 1
 ld x1, x3
-ld x1, 4
+sd x3, x3
 
