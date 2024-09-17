@@ -82,7 +82,7 @@ def operacao(line):
     elif(opcode == "beq"):
         byte = typeB(operandos, "1100011", "000")
     elif(opcode == "bne"):
-        byte = typeB(operandos, "1100011", "001")
+        byte = byte = typeB(operandos, "1100011", "001")
     elif(opcode == "jal"):
         byte = typeJ(operandos, "1101111")
     elif(opcode == "ld"):
@@ -112,36 +112,31 @@ def typeILd(operandos, code, fun3):
 
 def typeB(operandos, code, func3):
     rs1, rs2, imd = filtra_registradores("b", operandos)
-
-    # Separar o offset para os bits específicos
-    offset = int(imd, 2)
-    offset12 = (offset >> 12) & 1
-    offset10_5 = (offset >> 5) & 0x3F  # 6 bits
-    offset4_1 = (offset >> 1) & 0xF   # 4 bits
-    offset11 = (offset >> 11) & 1
     
-    return f"0b{offset12:01b}{offset10_5:06b}{rs2}{rs1}{func3}{offset4_1:04b}{offset11:01b}{code}"
+    offset11 = imd[1]
+    offset4_1 = imd[8:]
+    offset10_5 = imd[2:8]
+    offset12 = imd[0]
+  
+    return f"0b{offset12}{offset10_5}{rs2}{rs1}{func3}{offset4_1}{offset11}{code}"
     
 def typeJ(operandos, code):
     rd, imd = filtra_registradores("j", operandos)
-
-    # Separar o offset para os bits específicos
-    offset = int(imd, 2)
-    offset20 = (offset >> 20) & 1
-    offset10_1 = (offset >> 1) & 0x3FF  # 10 bits
-    offset11 = (offset >> 11) & 1
-    offset19_12 = (offset >> 12) & 0xFF  # 8 bits
     
-    return f"0b{offset20:01b}{offset10_1:010b}{offset11:01b}{offset19_12:08b}{rd}{code}"
+    offset19_12 = imd[1:9]
+    offset11 = imd[9]
+    offset10_1 = imd[10:]
+    offset20 = imd[0]
+    
+    return f"0b{offset20}{offset10_1}{offset11}{offset19_12}{rd}{code}"
 
 def typeS(operandos, code, func3):
-    rs1, rs2 = filtra_registradores("s", operandos)
+    rs1, rs2, imd = filtra_registradores("s", operandos)
     
-    # Separar o offset para os bits específicos
-    offset = 0
-    offset11_5 = (offset >> 11) & 0x7F 
+    offset4_0 = imd[7:]
+    offset11_5 = imd[:7]
     
-    return f"0b{offset11_5:07b}{rs2}{rs1}{func3}{offset:05b}{code}"
+    return f"0b{offset11_5}{rs2}{rs1}{func3}{offset4_0}{code}"
 
 def filtra_registradores(tipo, operandos):
     resultado = []
@@ -156,18 +151,21 @@ def filtra_registradores(tipo, operandos):
                 resultado.append(filtra_immI(elem))
             except:
                 if elem in rotulos:
+                    numero = rotulos[elem]- contLine
+                    complemento_dois(numero)
+                    
                     if tipo == "s":
-                        resultado.append(f"{(rotulos[elem]- contLine):07b}")
+                        resultado.append(f"{(numero):07b}")
                     elif tipo == "b":
                         print(f"Valor do rotulo: {rotulos[elem]}")
                         print(f"Valor do cont: {contLine}")
                         print(rotulos[elem]- contLine)
-                        resultado.append(f"{(rotulos[elem]- contLine):012b}")
+                        resultado.append(f"{(numero):012b}")
                     else:
                         print(f"Valor do rotulo: {rotulos[elem]}")
                         print(f"Valor do cont: {contLine}")
                         print(rotulos[elem]- contLine)
-                        resultado.append(f"{(rotulos[elem]- contLine):020b}")
+                        resultado.append(f"{(numero):020b}")
     print(contLine)
     print(operandos)
     contLine += 1
@@ -175,6 +173,13 @@ def filtra_registradores(tipo, operandos):
     
     return resultado
 
+def complemento_dois(binario):
+    if binario < 0:
+        
+        
+    
+    
+    
 def filtra_reg(operando):
     return f"{int(operando[1:]):05b}"
     
@@ -185,4 +190,5 @@ def filtra_immI(elem):
 
 if __name__ == "__main__":
     main()
+    
     
