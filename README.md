@@ -19,3 +19,6 @@ Referencias:
 Base:
 
 https://docs.google.com/document/d/1YlCuWHUAyFOEBDIAoOZtD7dMzyMK0adR3LiP_OY1DtU/edit
+
+beq jal
+https://chatgpt.com/share/66e97fc3-b5e8-8011-bb23-27ca210e4b51
