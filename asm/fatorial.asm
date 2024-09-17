@@ -9,11 +9,11 @@ addi x3, x0, 1
 
 
 
-fatorial:   
+soma:   
     beq  x1, x2,  exit
-    mul  x3, x3, x1
+    add  x3, x3, x1
     addi x1, x1, 1
-    beq x0, x0, fatorial
+    beq x0, x0, soma
        
 #Resulato em 2000 na memoria
 exit:   sd   x3, x2000

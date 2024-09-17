@@ -1,12 +1,12 @@
 jal x0, save
 loop:
-    beq x15, x7, fim
-    addi x15, x15, 1
+    beq x3, x7, fim
+    addi x3, x3, 1
     jal x0, loop
 save:
-    addi x15, x0, 1
+    addi x3, x0, 1
     addi x6, x0, 2
-    add x7, x15, x6
+    add x7, x3, x6
     jal x0, loop
 fim:
     nop

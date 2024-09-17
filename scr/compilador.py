@@ -83,6 +83,7 @@ def operacao(line):
     elif(opcode == "jal"):
         byte = typeJ(operandos, "1101111")
     elif(opcode == "ld"):
+        ##tratar imd rs1
         byte = typeI(operandos, "0000011" ,"011")
     elif(opcode == "sd"):
         byte = typeS(operandos, "0100011", "000")
@@ -102,26 +103,38 @@ def typeI(operandos, code, fun3):
     return "0b" + imd + rs1 + fun3 + rd + code
 
 def typeB(operandos, code, func3):
-    #dec rs1 rs2 e ofssets
     rs1, rs2, imd = filtra_registradores("b", operandos)
+
+    # Separar o offset para os bits específicos
+    offset = int(imd, 2)
+    offset12 = (offset >> 12) & 1
+    offset10_5 = (offset >> 5) & 0x3F  # 6 bits
+    offset4_1 = (offset >> 1) & 0xF   # 4 bits
+    offset11 = (offset >> 11) & 1
     
-    ofsset12 = "101"
-    ofsset4 = "101"
-    return "0b" + ofsset12 + rs2 + rs1 + func3 + ofsset4 + code
+    return f"0b{offset12:01b}{offset10_5:06b}{rs2}{rs1}{func3}{offset4_1:04b}{offset11:01b}{code}"
     
 def typeJ(operandos, code):
+    rd, imd = filtra_registradores("j", operandos)
 
-    rs1, ofsset = filtra_registradores("i", operandos)
+    # Separar o offset para os bits específicos
+    offset = int(imd, 2)
+    offset20 = (offset >> 20) & 1
+    offset10_1 = (offset >> 1) & 0x3FF  # 10 bits
+    offset11 = (offset >> 11) & 1
+    offset19_12 = (offset >> 12) & 0xFF  # 8 bits
     
-    return "0b" + ofsset + rs1 + code
+    return f"0b{offset20:01b}{offset19_12:08b}{offset11:01b}{offset10_1:010b}{rd}{code}"
 
-def typeS(operandos, code , func3):
-    #dec rs1 rs2 e ofssets
-    rs1, rs2 = filtra_registradores("s", operandos)
-    ofsset11 = "101"
-    ofsset4 =  "101"
-    return "0b" + ofsset11 + rs2 + rs1 + func3 + ofsset4 + code
-
+def typeS(operandos, code, func3):
+    rs1, rs2, imd = filtra_registradores("s", operandos)
+    
+    # Separar o offset para os bits específicos
+    offset = int(imd, 2)
+    offset11_5 = (offset >> 5) & 0x7F  # 7 bits
+    offset4_0 = offset & 0x1F          # 5 bits
+    
+    return f"0b{offset11_5:07b}{rs2}{rs1}{func3}{offset4_0:05b}{code}"
 
 def filtra_registradores(tipo, operandos):
     resultado = []
