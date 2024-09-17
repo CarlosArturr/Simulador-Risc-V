@@ -20,6 +20,7 @@ def simulador(binario):
     
     print(f"PC final: {pc}")
     print(f"Registradores: {registradores}")
+    print(f"Memoria: {memoria}")
 
 def executa(operacao, opcode):
     global run, registradores, pc
@@ -70,30 +71,6 @@ def executa(operacao, opcode):
             registradores[rd] = registradores[rs1] & imd
             return rd
     
-    else:
-        print("Opcode não reconhecido, finalizando simulação.")
-        run = 0  # Finaliza o simulador se a instrução não for reconhecida.
-        return 0
-    """     
-    elif opcode == "1100011":  # bne, beq
-        opcode, offset, func3, rs1, rs2, offset2  = operacao
-        #beq
-        if func3 == "000":
-            if(registradores[rs1] == registradores[rs2]):
-                pc = 0
-        #bne
-        if func3 == "001":
-
-       
-    elif opcode == "1101111":  # jal
-        opcode, rd, im8, im1, im10, imm1  = operacao
-
-
-       
-    elif opcode == "0100011":  # sd
-        opcode, offset, func3, rs1, rs2, offset2  = operacao
-
-       
     elif opcode == "0000011":  # ld
         opcode, rd, func3, rs1, imd = operacao
         
@@ -106,11 +83,36 @@ def executa(operacao, opcode):
             return rd
         elif func3 == "011":
             if rs1:
-                registradores[rd] = memoria[rs1]
-            if imd:
-                registradores[rd] = memoria[imd]
+                registradores[rd] = memoria[registradores[rs1]]
+                return rd
 
+    else:
+        print("Opcode não reconhecido, finalizando simulação.")
+        run = 0  # Finaliza o simulador se a instrução não for reconhecida.
+        return 0
+    """     
+    elif opcode == "1100011":  # bne, beq
+        opcode, offset, func3, rs1, rs2, offset2  = operacao
+        #beq
+        if func3 == "000":
+            if(registradores[rs1] == registradores[rs2]):
+                pc = 00
+                
+        #bne
+        if func3 == "001":
+            if(registradores[rs1] != registradores[rs2]):
+                pc = 000
+       
+    elif opcode == "1101111":  # jal
+        opcode, rd, im8, im1, im10, imm1  = operacao
+
+
+       
+    elif opcode == "0100011":  # sd
+        opcode, offset, func3, rs1, rs2, offset2  = operacao
+        if
 """
+
 
 def lista(binario):
     lista_instrucao = []

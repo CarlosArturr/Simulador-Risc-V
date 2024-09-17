@@ -86,7 +86,7 @@ def operacao(line):
     elif(opcode == "jal"):
         byte = typeJ(operandos, "1101111")
     elif(opcode == "ld"):
-        byte = typeI(operandos, "0000011" ,"011")
+        byte = typeILd(operandos, "0000011" ,"011")
     elif(opcode == "sd"):
         byte = typeS(operandos, "0100011", "000")
     elif(opcode == "nop"):
@@ -103,6 +103,12 @@ def typeR(operandos, code, fun3, fun7):
 def typeI(operandos, code, fun3):
     rd, rs1, imd = filtra_registradores("i", operandos)
     return f"0b{imd}{rs1}{fun3}{rd}{code}"
+
+def typeILd(operandos, code, fun3):
+    rd, rs1 = filtra_registradores("i", operandos)
+    imd = "000000000000"
+    return f"0b{imd}{rs1}{fun3}{rd}{code}"
+
 
 def typeB(operandos, code, func3):
     rs1, rs2, imd = filtra_registradores("b", operandos)
