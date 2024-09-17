@@ -83,7 +83,6 @@ def operacao(line):
     elif(opcode == "jal"):
         byte = typeJ(operandos, "1101111")
     elif(opcode == "ld"):
-        ##tratar imd rs1
         byte = typeI(operandos, "0000011" ,"011")
     elif(opcode == "sd"):
         byte = typeS(operandos, "0100011", "000")
@@ -96,11 +95,11 @@ def operacao(line):
 
 def typeR(operandos, code, fun3, fun7):
     rd, rs1, rs2 = filtra_registradores("r", operandos)
-    return "0b"+ fun7 + rs2 + rs1 + fun3 + rd + code
+    return f"0b{fun7}{rs2}{rs1}{fun3}{rd}{code}"
 
 def typeI(operandos, code, fun3):
     rd, rs1, imd = filtra_registradores("i", operandos)
-    return "0b" + imd + rs1 + fun3 + rd + code
+    return f"0b{imd}{rs1}{fun3}{rd}{code}"
 
 def typeB(operandos, code, func3):
     rs1, rs2, imd = filtra_registradores("b", operandos)
@@ -124,15 +123,14 @@ def typeJ(operandos, code):
     offset11 = (offset >> 11) & 1
     offset19_12 = (offset >> 12) & 0xFF  # 8 bits
     
-    return f"0b{offset20:01b}{offset19_12:08b}{offset11:01b}{offset10_1:010b}{rd}{code}"
+    return f"0b{offset20:01b}{offset10_1:010b}{offset11:01b}{offset19_12:08b}{rd}{code}"
 
 def typeS(operandos, code, func3):
     rs1, rs2, imd = filtra_registradores("s", operandos)
     
     # Separar o offset para os bits específicos
     offset = int(imd, 2)
-    offset11_5 = (offset >> 5) & 0x7F  # 7 bits
-    offset4_0 = offset & 0x1F          # 5 bits
+    offset11_5 = (offset >> 11) & 0x7F 
     
     return f"0b{offset11_5:07b}{rs2}{rs1}{func3}{offset4_0:05b}{code}"
 
