@@ -46,9 +46,12 @@ def compilador(line, saida):
         saida.write(f"{byte}\n")
 
 def retiraComentarios(line):
+    line = line.strip()
     indice = line.find("#")
     
-    if indice == 0:
+    if line == "":
+        return
+    elif indice == 0:
         return
     elif indice == -1:
         return line

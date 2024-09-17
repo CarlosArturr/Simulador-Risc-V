@@ -5,7 +5,5 @@ addi x3, x0, 55
 addi x1, x0, 4
 # Inicializa o resultado em x3 com 1
 addi x3, x0, 3
-# Multiplica x3 por x1 (fatorial)
-mul x3, x3, x1
 # Incrementa x1 em 1
 addi x1, x1, 1
