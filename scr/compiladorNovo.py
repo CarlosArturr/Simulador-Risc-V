@@ -21,7 +21,6 @@ def main():
             if(retorno.strip()[-1] == ":"):
                 rotulos[retorno.strip()[:-1]] = cont
                 cont -= 1
-                
             cont += 1
     
     print(rotulos)
@@ -142,6 +141,7 @@ def filtra_registradores(tipo, operandos):
     resultado = []
     global rotulos 
     global contLine
+    print(contLine)
     
     for elem in operandos:
         if(elem[0] == "x"):
@@ -152,7 +152,7 @@ def filtra_registradores(tipo, operandos):
             except:
                 if elem in rotulos:
                     numero = rotulos[elem] - contLine
-                    
+                    print(numero)
                     if tipo == "s":
                         resultado.append(f"{complemento_de_dois(numero, bits=7)}")
                     elif tipo == "b":
