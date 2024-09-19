@@ -1,6 +1,6 @@
 # Simulador Risc-V
 
-Este projeto faz parte de uma disciplina de Organização e Arquitetura de Computadores (OAC), com o objetivo de construir um simulador baseado na arquitetura RISC-V, utilizando um subconjunto de instruções. O simulador é capaz de interpretar e executar instruções como add, addi, and, andi, beq, bne, jal, ld, nop, or, sd, sub.
+Este projeto faz parte de uma disciplina de Organização e Arquitetura de Computadores (OAC), com o objetivo de construir um simulador baseado na arquitetura RISC-V, utilizando um subconjunto de instruções. O simulador é capaz de interpretar e executar instruções add, addi, and, andi, beq, bne, jal, ld, nop, or, sd, sub.
 Pelos Alunos:
 
     Carlos Artur
@@ -12,7 +12,7 @@ Parte 1:
 
 Mais detalhes sobre o projeto podem ser encontrados na primeira parte da documentação, disponível em Parte 1 do Projeto.
 
-Compilador
+-Compilador
 
 O compilador deste projeto recebe um arquivo de entrada em formato .asm (com as instruções em Assembly RISC-V) e gera um arquivo de saída .txt, com o mesmo nome, contendo o código binário correspondente.
 Como Usar
@@ -53,6 +53,63 @@ Estrutura do Código
     typeR(), typeI(), typeS(), typeB(), typeJ(): Geram o código binário para os diferentes formatos de instrução suportados pela arquitetura RISC-V.
     filtra_registradores(): Processa os operandos das instruções, convertendo-os em valores binários.
 
+-Simulador
+
+O simulador é responsável por interpretar e executar o código binário gerado pelo compilador, processando as instruções RISC-V.
+
+Como Funciona?
+
+O simulador lê um arquivo de entrada contendo as instruções em binário e executa cada uma delas, atualizando o valor dos registradores e a memória conforme necessário. O simulador também imprime o valor do program counter (PC), o opcode da instrução atual e o valor do registrador modificado, durante a execução de cada instrução.
+Instruções Suportadas
+
+    Aritméticas: add, addi, sub
+    Lógicas: and, andi, or
+    Controle de fluxo: beq, bne, jal
+    Memória: ld, sd
+    Outras: nop
+
+Como Usar
+
+    Execução: Para rodar o simulador, execute o seguinte comando no terminal:
+
+    bash
+
+python simulador.py <arquivo_binario>
+
+O arquivo <arquivo_binario> deve conter as instruções em código binário, e o simulador as processará e exibirá o resultado.
+
+Exemplo: Se você tiver um arquivo de entrada chamado programa_binario.txt, o comando seria:
+
+bash
+
+    python simulador.py programa_binario.txt
+
+    Isso executará as instruções do arquivo e mostrará o resultado no terminal.
+
+Funcionalidades
+
+    Registradores e Memória: O simulador possui 8 registradores e uma memória de 128 posições.
+
+    Controle de Fluxo: O PC (Program Counter) é atualizado a cada instrução. Instruções de salto condicional e incondicional são executadas adequadamente.
+
+    Mensagens de Erro: Se um opcode não for reconhecido, o simulador exibe uma mensagem de erro e encerra a simulação.
+
+    Exemplo de Saída: Durante a execução, o simulador imprime o valor do PC, o opcode executado e o valor do registrador modificado:
+
+
+    pc = 0, opCode = 0110011, Register r1 = 10
+    pc = 1, opCode = 1101111, Register r5 = 5
+    Opcode não reconhecido, finalizando simulação.
+
+Estrutura do Código
+
+    simulador(): Função principal que executa o ciclo de instruções, atualizando o PC e os registradores.
+    executa(): Decodifica e executa cada instrução, modificando registradores e memória.
+    lista(): Organiza o arquivo binário em uma lista de instruções.
+    cleaner(): Remove caracteres indesejados da linha binária.
+    organizaInstrucao(): Decodifica cada instrução binária em seus componentes, como opcode, registradores, e offsets.
+
+
 Referências
 
     Guia Prático RISC-V 1.0.0
@@ -60,9 +117,8 @@ Referências
     Arquitetura e Organização de Computadores (William Stallings)
     Digital Design and Computer Architecture (David Harris, Sarah Harris)
 
-    Links:
 
-    http://riscvbook.com/portuguese/guia-pratico-risc-v-1.0.0.pdf
-    https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
-    https://archive.org/details/stallings-arquitetura-e-organizacao-de-computadores-10a/page/n31/mode/2up?view=theater 
+  http://riscvbook.com/portuguese/guia-pratico-risc-v-1.0.0.pdf
+  https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
+  https://archive.org/details/stallings-arquitetura-e-organizacao-de-computadores-10a/page/n31/mode/2up?view=theater 
 
