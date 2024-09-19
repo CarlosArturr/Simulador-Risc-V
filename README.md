@@ -12,7 +12,7 @@ Parte 1:
 
 Mais detalhes sobre o projeto podem ser encontrados na primeira parte da documentação, disponível em Parte 1 do Projeto.
 
--Compilador
+###Compilador
 
 O compilador deste projeto recebe um arquivo de entrada em formato .asm (com as instruções em Assembly RISC-V) e gera um arquivo de saída .txt, com o mesmo nome, contendo o código binário correspondente.
 Como Usar
@@ -53,7 +53,7 @@ Estrutura do Código
     typeR(), typeI(), typeS(), typeB(), typeJ(): Geram o código binário para os diferentes formatos de instrução suportados pela arquitetura RISC-V.
     filtra_registradores(): Processa os operandos das instruções, convertendo-os em valores binários.
 
--Simulador
+###Simulador
 
 O simulador é responsável por interpretar e executar o código binário gerado pelo compilador, processando as instruções RISC-V.
 
@@ -117,8 +117,8 @@ Referências
     Arquitetura e Organização de Computadores (William Stallings)
     Digital Design and Computer Architecture (David Harris, Sarah Harris)
 
-
-  http://riscvbook.com/portuguese/guia-pratico-risc-v-1.0.0.pdf
-  https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
-  https://archive.org/details/stallings-arquitetura-e-organizacao-de-computadores-10a/page/n31/mode/2up?view=theater 
+    Links:
+      http://riscvbook.com/portuguese/guia-pratico-risc-v-1.0.0.pdf
+      https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
+      https://archive.org/details/stallings-arquitetura-e-organizacao-de-computadores-10a/page/n31/mode/2up?view=theater 
 
