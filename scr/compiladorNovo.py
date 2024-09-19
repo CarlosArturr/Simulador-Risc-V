@@ -148,7 +148,7 @@ def filtra_registradores(tipo, operandos):
             resultado.append(filtra_reg(elem))
         else:
             try:
-                resultado.append(filtra_immI(elem))
+                resultado.append(complemento_de_dois(elem, bits=12))
             except:
                 if elem in rotulos:
                     numero = rotulos[elem] - contLine
@@ -175,12 +175,7 @@ def complemento_de_dois(numero, bits=32):
 def filtra_reg(operando):
     return f"{int(operando[1:]):05b}"
     
-    
-def filtra_immI(elem):
-    return f"{int(elem):012b}"
-
 
 if __name__ == "__main__":
     main()
-    
     
