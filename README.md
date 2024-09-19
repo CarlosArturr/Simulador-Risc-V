@@ -8,7 +8,9 @@ Pelos Alunos:
     Nicolas Paz
     João Pedro
 
-Parte 1:
+### Especificações de Implementação
+
+     ...
 
 Mais detalhes sobre o projeto podem ser encontrados na primeira parte da documentação, disponível em Parte 1 do Projeto.
 
