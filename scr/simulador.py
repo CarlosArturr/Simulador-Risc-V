@@ -12,8 +12,8 @@ def simulador(binario):
     
     while run == 1 and pc < limit:
         opcode = binario[pc][0]
-        r = executa(binario[pc], opcode)
         pc_anterior = pc
+        r = executa(binario[pc], opcode)
         pc += 1
         
         if(run == 1):
@@ -60,7 +60,7 @@ def executa(operacao, opcode):
 
         rd = int(rd, 2)
         rs1 = int(rs1, 2)
-        imd = int(imd, 2)
+        imd = complemento2(imd)
 
         #Sem atribuicao
         if rd == 0:
@@ -76,10 +76,10 @@ def executa(operacao, opcode):
     
     elif opcode == "0000011":  # ld
         opcode, rd, func3, rs1, imd = operacao
+        #imd inutilizado pois e tratado diretamento por registrador
         
         rd = int(rd, 2)
         rs1 = int(rs1, 2)
-        imd = int(imd, 2)
 
         #Sem atribuicao
         if rd == 0:
@@ -91,6 +91,7 @@ def executa(operacao, opcode):
 
     elif opcode == "0100011":  # sd
         opcode, offset, func3, rs1, rs2, offset2  = operacao
+        #ofsset inutilizado pois e tratado diretamento por registrador
         rs1 = int(rs1, 2)
         rs2 = int(rs2, 2)
         
@@ -98,28 +99,64 @@ def executa(operacao, opcode):
             memoria[rs2] = registradores[rs1]
             #corrigir
             return rs1
-
-    else:
-        run = 0  # Finaliza o simulador se a instrução não for reconhecida.
-        return 0
-    """     
+    
     elif opcode == "1100011":  # bne, beq
-        opcode, offset, func3, rs1, rs2, offset2  = operacao
+        opcode, im, offset, func3, rs1, rs2, offset2, imm  = operacao
+        rs1 = int(rs1, 2)
+        rs2 = int(rs2, 2)
+        offset = complemento2(im + offset)
+        offset2 = complemento2(imm + offset2)
+        pulo = (offset + offset2)
+        
+        if(pulo >= 0):
+            pulo -= 1
+
         #beq
         if func3 == "000":
             if(registradores[rs1] == registradores[rs2]):
-                pc = 00
-                
+                pc = pc + pulo
+              
         #bne
         if func3 == "001":
             if(registradores[rs1] != registradores[rs2]):
-                pc = 000
+                pc = pc + pulo
+        
+        print(pulo)
+        return 0              
        
     elif opcode == "1101111":  # jal
-        opcode, rd, im8, im1, im10, imm1  = operacao
+        opcode, rd, im8, im, im10, imm  = operacao
+        rd = int(rd, 2)
+        
+        im8 = complemento2(im + im8)
+        im10 = complemento2(imm + im10)
+        
+        pulo = (im8 + im10)
+        
+        if(pulo >= 0):
+            pulo -= 1
+        
+        print(pulo)
+        pc = pc + pulo
+        return rd
+        
+    else:
+        run = 0  # Finaliza o simulador se a instrução não for reconhecida.
+        return 0
 
-"""
-
+def complemento2(binario):
+    # Verifica se o número é negativo (complemento de 2)
+    if binario[0] == '1':
+        # Inverte os bits
+        invertido = ''.join('1' if b == '0' else '0' for b in binario)
+        # Converte para decimal e adiciona 1
+        decimal = int(invertido, 2) + 1
+        # Converte para negativo
+        decimal = -decimal
+    else:
+        # Se for positivo, converte diretamente
+        decimal = int(binario, 2) 
+    return decimal
 
 def lista(binario):
     lista_instrucao = []
