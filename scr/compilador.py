@@ -22,8 +22,7 @@ def main():
                 rotulos[retorno.strip()[:-1]] = cont
                 cont -= 1
             cont += 1
-    
-    print(rotulos)
+
     risc.seek(0)
      
     
@@ -130,7 +129,9 @@ def typeJ(operandos, code):
     return f"0b{offset20}{offset10_1}{offset11}{offset19_12}{rd}{code}"
 
 def typeS(operandos, code, func3):
-    rs1, rs2, imd = filtra_registradores("s", operandos)
+    rs1, rs2 = filtra_registradores("s", operandos)
+    #imd não utilizado
+    imd = "0000000"
     
     offset4_0 = imd[7:]
     offset11_5 = imd[:7]
@@ -141,7 +142,6 @@ def filtra_registradores(tipo, operandos):
     resultado = []
     global rotulos 
     global contLine
-    print(contLine)
     
     for elem in operandos:
         if(elem[0] == "x"):
@@ -152,7 +152,6 @@ def filtra_registradores(tipo, operandos):
             except:
                 if elem in rotulos:
                     numero = rotulos[elem] - contLine
-                    print(numero)
                     if tipo == "s":
                         resultado.append(f"{complemento_de_dois(numero, bits=7)}")
                     elif tipo == "b":
@@ -179,3 +178,6 @@ def filtra_reg(operando):
 if __name__ == "__main__":
     main()
     
+    
+
+
