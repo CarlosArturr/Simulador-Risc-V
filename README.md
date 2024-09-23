@@ -8,9 +8,15 @@ Pelos Alunos:
     Nicolas Paz
     João Pedro
 
-### Especificações de Implementação
+### Especificações de Implementação das Instruções
 
-     ...
+     Registradores: add, and, sub, or | Entradas rd, rs1, rs2
+     Imediato: addi, andi             | Entradas rd, rs1, imd
+     Salto Condicional: beq, bne      | Entradas rs1, rs2, rotulo/linha
+     Salto:  jal                      | Entradas rd, rotulo/linha
+     Memória Amazenar: sd             | Entradas rs1, rs2/memoria
+     Memória Carregar: ld             | Entradas rd, rs1/memoria
+     Pseudo Instrução: nop            |Internamente addi x0, x0, x0
 
 Mais detalhes sobre o projeto podem ser encontrados na primeira parte da documentação, disponível em Parte 1 do Projeto.
 
