@@ -108,9 +108,6 @@ def executa(operacao, opcode):
         offset2 = complemento2(imm + offset2)
         pulo = (offset + offset2)
         
-        if(pulo >= 0):
-            pulo -= 1
-
         #beq
         if func3 == "000":
             if(registradores[rs1] == registradores[rs2]):
@@ -133,9 +130,6 @@ def executa(operacao, opcode):
         
         pulo = (im8 + im10)
         
-        if(pulo >= 0):
-            pulo -= 1
-        
         print(pulo)
         pc = pc + pulo
         return rd
@@ -145,16 +139,11 @@ def executa(operacao, opcode):
         return 0
 
 def complemento2(binario):
-    # Verifica se o número é negativo (complemento de 2)
     if binario[0] == '1':
-        # Inverte os bits
         invertido = ''.join('1' if b == '0' else '0' for b in binario)
-        # Converte para decimal e adiciona 1
         decimal = int(invertido, 2) + 1
-        # Converte para negativo
         decimal = -decimal
     else:
-        # Se for positivo, converte diretamente
         decimal = int(binario, 2) 
     return decimal
 

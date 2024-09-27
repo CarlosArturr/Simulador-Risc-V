@@ -154,7 +154,7 @@ def filtra_registradores(tipo, operandos):
             except:
                 if elem in rotulos:
                     
-                    numero = ajustaSalto(rotulos[elem], contLine)
+                    numero = rotulos[elem]
                     print(numero)
 
                     if tipo == "s":
@@ -166,14 +166,6 @@ def filtra_registradores(tipo, operandos):
     contLine += 1
 
     return resultado
-
-def ajustaSalto(posRotulo, linha):
-    numero = posRotulo - linha
-    
-    if numero > 0:
-        return numero - 1
-    else:
-        return numero
 
 def complemento_de_dois(numero, bits=32):
 
