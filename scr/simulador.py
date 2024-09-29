@@ -5,29 +5,28 @@ pc = 0
 memoria = [0] * 128
 registradores = [0] * 8
 
-def simulador(binario):
+#Simulador executa as operações da arquivo binario com base no pc atual enquanto não atingir criterio de parada
+def simulador(Operacoes):
     global run, pc
     
-    limit = len(binario)
+    limite_pc = len(Operacoes)
     
-    while run == 1 and pc < limit:
-        opcode = binario[pc][0]
+    while run == 1 and pc < limite_pc:
+        opcode = Operacoes[pc][0]
         pc_anterior = pc
-        r = executa(binario[pc], opcode)
+        texto_execução = executa(Operacoes[pc], opcode)
         pc += 1
         
-        if(run == 1):
-            print(f'pc = {pc_anterior}, opCode = {opcode}, Register r{r} = {registradores[r]}')
-        else:
-            print("Opcode não reconhecido, finalizando simulação.")
+        print(f'PC = {pc_anterior}, {texto_execução}')
     
-    print(f"PC final: {pc-1}")
+    print(f"PC final: {pc_anterior}")
     print(f"Registradores: {registradores}")
     print(f"Memoria: {memoria}")
 
+#Executa o binario e trata criterios de parada
 def executa(operacao, opcode):
-    global run, registradores, pc
-   
+    global run, registradores, pc, memoria
+                
     if opcode == "0110011":  # add, sub, or, and
         opcode, rd, func3, rs1, rs2, func7 = operacao
 
@@ -37,23 +36,23 @@ def executa(operacao, opcode):
 
         #Sem atribuicao
         if rd == 0:
-            return rd
+            return "000000000" #corrigir
         #add
         elif func3 == "000" and func7 == "0000000":
             registradores[rd] = registradores[rs1] + registradores[rs2]
-            return rd
+            return (f"ADD x{rd} = x{rs1} + x{rs2}")
         #sub
         elif func3 == "000" and func7 == "0100000":
             registradores[rd] = registradores[rs1] - registradores[rs2]
-            return rd
+            return (f"SUB x{rd} = x{rs1} - x{rs2}")
         #and
         elif func3 == "111" and func7 == "0000000":
             registradores[rd] = registradores[rs1] & registradores[rs2]
-            return rd
+            return (f"AND x{rd} = x{rs1} & x{rs2}")
         #or
         elif func3 == "110" and func7 == "0000000":
             registradores[rd] = registradores[rs1] | registradores[rs2]
-            return rd
+            return (f"OR x{rd} = x{rs1} | x{rs2}")
         
     elif opcode == "0010011":  # addi, andi, nop
         opcode, rd, func3, rs1, imd = operacao
@@ -64,15 +63,15 @@ def executa(operacao, opcode):
 
         #Sem atribuicao
         if rd == 0:
-            return rd
+            return "000000000"
         #addi << nop
         elif func3 == "000":
             registradores[rd] = registradores[rs1] + imd
-            return rd
+            return (f"ADDI x{rd} = x{rs1} + {imd}")
         #andi
         elif func3 == "111":
             registradores[rd] = registradores[rs1] & imd
-            return rd
+            return (f"ANDI x{rd} = x{rs1} & {imd}")
     
     elif opcode == "0000011":  # ld
         opcode, rd, func3, rs1, imd = operacao
@@ -83,11 +82,14 @@ def executa(operacao, opcode):
 
         #Sem atribuicao
         if rd == 0:
-            return rd
+            return "00000000"
         elif func3 == "011":
-            if rs1:
+            if rs1 < 0:
+                run = 0
+                return (f"LD Invalido x{rd} nâo Existe")
+            else:
                 registradores[rd] = memoria[registradores[rs1]]
-                return rd
+                return (f"LD x{rd} = Memoria{registradores[rs1]} = {memoria[registradores[rs1]]}")
 
     elif opcode == "0100011":  # sd
         opcode, offset, func3, rs1, rs2, offset2  = operacao
@@ -96,9 +98,13 @@ def executa(operacao, opcode):
         rs2 = int(rs2, 2)
         
         if func3 == "000":
-            memoria[rs2] = registradores[rs1]
-            #corrigir
-            return rs1
+
+            if registradores[rs1] < 0:
+                run = 0
+                return (f"SD Invalido Memoria {registradores[rs1]} nâo Existe")
+            
+            memoria[registradores[rs2]] = registradores[rs1]
+            return (f'SD Memoria {registradores[rs2]} =  x{rs1}')
     
     elif opcode == "1100011":  # bne, beq
         opcode, im, offset, func3, rs1, rs2, offset2, imm  = operacao
@@ -107,19 +113,24 @@ def executa(operacao, opcode):
         offset = complemento2(im + offset)
         offset2 = complemento2(imm + offset2)
         pulo = (offset + offset2)
-        
+        func = ""
+            
+        if(pulo >= 0):
+            pulo -= 1
+
         #beq
         if func3 == "000":
             if(registradores[rs1] == registradores[rs2]):
                 pc = pc + pulo
+            func = (f"BEQ x{rs1} == x{rs2}")
               
         #bne
         if func3 == "001":
             if(registradores[rs1] != registradores[rs2]):
                 pc = pc + pulo
-        
-        print(pulo)
-        return 0              
+            func = (f"BNE x{rs1} != x{rs2}")
+
+        return f'{func} Se Condição Verdadeira Salto Para {pc +1}'  
        
     elif opcode == "1101111":  # jal
         opcode, rd, im8, im, im10, imm  = operacao
@@ -130,14 +141,22 @@ def executa(operacao, opcode):
         
         pulo = (im8 + im10)
         
-        print(pulo)
+        if(pulo >= 0):
+            pulo -= 1
+
+        armazenaRegistrador
+
         pc = pc + pulo
-        return rd
+        return  (f"JAL PC = pc + pulo = {pc + 1}")
         
     else:
         run = 0  # Finaliza o simulador se a instrução não for reconhecida.
-        return 0
+        return "OPCODE INVALIDO SIMULAÇÃO ENCERRADA"
 
+def armazenaRegistrador(nome_op):
+    return (f'{nome_op}')
+
+#Retorna o binario convertido
 def complemento2(binario):
     if binario[0] == '1':
         invertido = ''.join('1' if b == '0' else '0' for b in binario)
@@ -147,20 +166,23 @@ def complemento2(binario):
         decimal = int(binario, 2) 
     return decimal
 
+#Recebe o arquivo e trata cada intrução em binario retornado uma lista de operações
 def lista(binario):
-    lista_instrucao = []
+    Operacoes = []
     
     for line in binario:
         line = cleaner(line)
         opcode = line[25:32]
-        lista_instrucao.append(organizaInstrucao(line, opcode))
+        Operacoes.append(organizaInstrucao(line, opcode))
         
-    return lista_instrucao
-        
+    return Operacoes
+
+#Limpa a linha para receber o binario puro
 def cleaner(line):
     line = line.split("b")
     return line[-1]
 
+#Verifica o tipo de Instrução e retorna os valores separados
 def organizaInstrucao(line, opcode):
     # Decodifica as instruções com base no opcode
     if opcode == "0110011":  # add, sub, or, and
@@ -186,7 +208,6 @@ def main():
     pc = 0
     memoria = [0] * 128
     registradores = [0] * 8
-    
     simulador(binario)
 
 if __name__ == "__main__":

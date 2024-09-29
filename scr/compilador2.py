@@ -96,16 +96,16 @@ def operacao(line):
 
 def typeR(operandos, code, fun3, fun7):
     rd, rs1, rs2 = filtra_registradores("r", operandos)
-    return f"0b{fun7}{rs2}{rs1}{fun3}{rd}{code}"
+    return f"{fun7}{rs2}{rs1}{fun3}{rd}{code}"
 
 def typeI(operandos, code, fun3):
     rd, rs1, imd = filtra_registradores("i", operandos)
-    return f"0b{imd}{rs1}{fun3}{rd}{code}"
+    return f"{imd}{rs1}{fun3}{rd}{code}"
 
 def typeILd(operandos, code, fun3):
     rd, rs1 = filtra_registradores("i", operandos)
     imd = "000000000000"
-    return f"0b{imd}{rs1}{fun3}{rd}{code}"
+    return f"{imd}{rs1}{fun3}{rd}{code}"
 
 
 def typeB(operandos, code, func3):
@@ -116,7 +116,7 @@ def typeB(operandos, code, func3):
     offset10_5 = imd[2:8]
     offset12 = imd[0]
   
-    return f"0b{offset12}{offset10_5}{rs2}{rs1}{func3}{offset4_1}{offset11}{code}"
+    return f"{offset12}{offset10_5}{rs2}{rs1}{func3}{offset4_1}{offset11}{code}"
     
 def typeJ(operandos, code):
     rd, imd = filtra_registradores("j", operandos)
@@ -126,24 +126,23 @@ def typeJ(operandos, code):
     offset10_1 = imd[10:]
     offset20 = imd[0]
     
-    return f"0b{offset20}{offset10_1}{offset11}{offset19_12}{rd}{code}"
+    return f"{offset20}{offset10_1}{offset11}{offset19_12}{rd}{code}"
 
 def typeS(operandos, code, func3):
     rs1, rs2 = filtra_registradores("s", operandos)
     #imd não utilizado
-    imd = "0000000"
+    imd = "000000000000"
     
     offset4_0 = imd[7:]
     offset11_5 = imd[:7]
     
-    return f"0b{offset11_5}{rs2}{rs1}{func3}{offset4_0}{code}"
+    return f"{offset11_5}{rs2}{rs1}{func3}{offset4_0}{code}"
 
 def filtra_registradores(tipo, operandos):
     resultado = []
     global rotulos 
     global contLine
     
-    print(f"instrução: {operandos}, linha: {contLine}")
     
     for elem in operandos:
         if(elem[0] == "x"):
@@ -155,7 +154,6 @@ def filtra_registradores(tipo, operandos):
                 if elem in rotulos:
                     
                     numero = rotulos[elem]
-                    print(numero)
 
                     if tipo == "s":
                         resultado.append(f"{complemento_de_dois(numero, bits=7)}")
