@@ -202,7 +202,6 @@ def complemento_de_dois(numero, bits=32):
 def filtra_reg(operando):
     return f"{int(operando[1:]):05b}"  # Converte o registrador para 5 bits binários
     
-
 # Executa a função principal se o script for executado diretamente
 if __name__ == "__main__":
     main()
